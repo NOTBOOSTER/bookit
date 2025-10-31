@@ -3,20 +3,37 @@
 import Image from "next/image";
 import { useState, FormEvent } from "react";
 import { useSearch } from "@/app/lib/SearchContext";
+import { useRouter, usePathname } from "next/navigation";
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
   const { setSearchQuery } = useSearch();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setSearchQuery(inputValue);
+    
+    if (pathname !== "/") {
+      sessionStorage.setItem("pendingSearch", inputValue);
+      router.push("/");
+    } else {
+      setSearchQuery(inputValue);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     if (e.target.value === "") {
       setSearchQuery("");
+    }
+  };
+
+  const handleLogoClick = () => {
+    setInputValue("");
+    setSearchQuery("");
+    if (pathname !== "/") {
+      router.push("/");
     }
   };
 
@@ -28,10 +45,7 @@ const Header = () => {
         alt="header"
         width={100}
         height={100}
-        onClick={() => {
-          setInputValue("");
-          setSearchQuery("");
-        }}
+        onClick={handleLogoClick}
       />
       <form onSubmit={handleSubmit} className="flex gap-4">
         <input

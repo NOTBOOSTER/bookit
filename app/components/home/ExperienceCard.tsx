@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Experience } from "@/app/lib/types";
+import Link from "next/link";
 
 const ExperienceCard: React.FC<{ experience: Experience }> = ({
   experience,
@@ -35,9 +36,11 @@ const ExperienceCard: React.FC<{ experience: Experience }> = ({
             <span className="text-[12px]">From </span>
             <span className="text-xl font-[500]">₹{experience.price}</span>
           </div>
-          <button className="bg-[#FFD643] hover:bg-yellow-500 text-[#161616] px-6 py-2 rounded transition-colors duration-200 text-sm font-[500]">
-            View Details
-          </button>
+          <Link href={`/experience/${experience.id}`}>
+            <button className="bg-[#FFD643] hover:bg-yellow-500 text-[#161616] px-6 py-2 rounded transition-colors duration-200 text-sm font-[500]">
+              View Details
+            </button>
+          </Link>
         </div>
       </div>
     </div>

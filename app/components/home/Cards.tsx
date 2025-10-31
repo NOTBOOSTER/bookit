@@ -13,7 +13,8 @@ const Cards = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { searchQuery } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -21,7 +22,7 @@ const Cards = () => {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/experiences", {
+        const response = await fetch(`${baseUrl}/api/experiences`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -48,6 +49,15 @@ const Cards = () => {
 
     fetchExperiences();
   }, []);
+
+  useEffect(() => {
+    const pendingSearch = sessionStorage.getItem("pendingSearch");
+    if (pendingSearch) {
+      logger.info("Applying pending search:", pendingSearch);
+      setSearchQuery(pendingSearch);
+      sessionStorage.removeItem("pendingSearch");
+    }
+  }, [setSearchQuery]);
 
   const filteredExperiences = experiences.filter((exp) => {
     if (!searchQuery) return true;
@@ -107,7 +117,7 @@ const Cards = () => {
             </p>
             {searchQuery && (
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => setSearchQuery("")}
                 className="mt-4 bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded transition-colors"
               >
                 Clear Search
