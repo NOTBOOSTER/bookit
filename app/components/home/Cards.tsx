@@ -14,15 +14,13 @@ const Cards = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { searchQuery, setSearchQuery } = useSearch();
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${baseUrl}/api/experiences`, {
+        const response = await fetch(`/api/experiences`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
