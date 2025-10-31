@@ -13,7 +13,7 @@ const Header = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (pathname !== "/") {
       sessionStorage.setItem("pendingSearch", inputValue);
       router.push("/");

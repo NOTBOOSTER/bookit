@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     const pool = await createPool();
-    
+
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM promo_codes WHERE code = ? AND is_active = TRUE",
       [code.toUpperCase()]

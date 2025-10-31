@@ -2,19 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { loadStripe } from "@stripe/stripe-js";
 import CheckoutSummary from "@/app/components/checkout/CheckoutSummary";
 import CheckoutForm from "@/app/components/checkout/CheckoutForm";
 import { BookingData } from "@/app/lib/types";
 import Logger from "@/app/lib/logger";
 
-const logger = new Logger("CLIENT");
+const logger = new Logger("CHECKOUT");
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 export default function CheckoutPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
-  
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [promoCode, setPromoCode] = useState("");
@@ -26,31 +31,37 @@ export default function CheckoutPage() {
   const slotId = searchParams.get("slotId");
   const quantity = parseInt(searchParams.get("quantity") || "1");
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
   useEffect(() => {
     if (!experienceId || !slotId) {
       router.push("/");
       return;
     }
 
+    // i wanna add this
+    // function validateEmail(email) {
+    //   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    //   return regex.test(email);
+    // }
+
     const fetchData = async () => {
       try {
-        const res = await fetch(`${baseUrl}/api/experiences?id=${experienceId}`);
+        const res = await fetch(`/api/experiences?id=${experienceId}`);
         const data = await res.json();
-        
-        const slot = data.slots.find((s: { id: number }) => s.id === parseInt(slotId));
-        
+
+        const slot = data.slots.find(
+          (s: { id: number }) => s.id === parseInt(slotId)
+        );
+
         const subtotal = data.experience.price * quantity;
         const taxes = Math.round(subtotal * 0.05);
-        
+
         setBookingData({
           experience: data.experience,
           slot,
           quantity,
           subtotal,
           taxes,
-          total: subtotal + taxes
+          total: subtotal + taxes,
         });
         setLoading(false);
       } catch (error) {
@@ -60,13 +71,13 @@ export default function CheckoutPage() {
     };
 
     fetchData();
-  }, [experienceId, slotId, quantity, router, baseUrl]);
+  }, [experienceId, slotId, quantity, router]);
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim() || !bookingData) return;
 
     try {
-      const res = await fetch(`${baseUrl}/api/promo/validate`, {
+      const res = await fetch("/api/promo/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: promoCode }),
@@ -77,12 +88,15 @@ export default function CheckoutPage() {
         let discountAmount = 0;
 
         if (promo.discount_type === "percentage") {
-          discountAmount = Math.round(bookingData.subtotal * (promo.discount_value / 100));
+          discountAmount = Math.round(
+            bookingData.subtotal * (promo.discount_value / 100)
+          );
         } else {
           discountAmount = promo.discount_value;
         }
 
         setDiscount(discountAmount);
+        alert("Promo code applied successfully!");
       } else {
         alert("Invalid promo code");
       }
@@ -105,35 +119,47 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${baseUrl}/api/bookings`, {
+      const finalTotal = bookingData.total - discount;
+
+      const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          experience_id: bookingData.experience.id,
-          slot_id: bookingData.slot.id,
-          user_name: fullName,
-          email,
+          experienceId: bookingData.experience.id,
+          slotId: bookingData.slot.id,
           quantity,
-          promo_code: discount > 0 ? promoCode : null,
+          experienceName: bookingData.experience.name,
+          total: finalTotal,
+          email,
+          fullName,
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        router.push(`/confirmation?ref=${data.booking_ref}`);
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { url } = await response.json();
+
+      if (url) {
+        window.location.href = url;
       } else {
-        alert("Booking failed");
+        throw new Error("No checkout URL returned");
       }
     } catch (error) {
-      alert("Error creating booking");
-      logger.error("Error creating booking:", error);
+      console.error("Error:", error);
+      alert("Error processing payment");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (!bookingData) return null;
@@ -143,7 +169,10 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <button onClick={() => router.back()} className="flex items-center gap-2 text-gray-700 mb-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-gray-700 mb-6"
+        >
           <span>
             <svg
               width="20"
@@ -190,7 +219,7 @@ export default function CheckoutPage() {
               total={finalTotal}
               onSubmit={handleSubmit}
               isSubmitting={isSubmitting}
-              isDisabled={!agreedToTerms || !email || !fullName}
+              isDisabled={!agreedToTerms || !email || !fullName || !email.includes("@") || !email.includes(".")}
             />
           </div>
         </div>
