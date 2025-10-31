@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutSummary from "@/app/components/checkout/CheckoutSummary";
@@ -14,7 +14,7 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -36,12 +36,6 @@ export default function CheckoutPage() {
       router.push("/");
       return;
     }
-
-    // i wanna add this
-    // function validateEmail(email) {
-    //   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    //   return regex.test(email);
-    // }
 
     const fetchData = async () => {
       try {
@@ -225,5 +219,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        Loading...
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }
