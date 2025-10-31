@@ -105,53 +105,66 @@ const seedSampleData = async (pool: mysql.Pool) => {
   
   if (expCount === 0) {
     await pool.query(`
-  INSERT INTO experiences (name, description, location, price, image_url, min_age) VALUES
-  ('Kayaking', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Udupi', 999.00, 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=400&fit=crop', 10),
-  ('Nandi Hills Sunrise', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Bangalore', 899.00, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop', 10),
-  ('Coffee Trail', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Coorg', 1299.00, 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=400&fit=crop', 10),
-  ('Kayaking', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Udupi, Karnataka', 999.00, 'https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&h=400&fit=crop', 10),
-  ('Nandi Hills Sunrise', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Bangalore', 899.00, 'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=800&h=400&fit=crop', 10),
-  ('Boat Cruise', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Sunderban', 999.00, 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=800&h=400&fit=crop', 10),
-  ('Bunjee Jumping', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Manali', 999.00, 'https://images.unsplash.com/photo-1656833111546-07d98abab448?w=800&h=400&fit=crop', 18),
-  ('Coffee Trail', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Coorg', 1299.00, 'https://images.unsplash.com/photo-1511406361295-0a1ff814c0ce?w=800&h=400&fit=crop', 10)
-`);
-
-    await pool.query(`
-      INSERT INTO slots (experience_id, slot_date, slot_time, total_capacity, booked_count) VALUES
-      (1, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '07:00:00', 10, 6),
-      (1, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '09:00:00', 10, 8),
-      (1, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '11:00:00', 10, 5),
-      (1, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '13:00:00', 10, 10),
-      (1, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '07:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '09:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '11:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '13:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '07:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '09:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '11:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '13:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 3 DAY), '07:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 3 DAY), '09:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 3 DAY), '11:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 3 DAY), '13:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 4 DAY), '07:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 4 DAY), '09:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 4 DAY), '11:00:00', 10, 0),
-      (1, DATE_ADD(CURDATE(), INTERVAL 4 DAY), '13:00:00', 10, 0),
-      (2, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '05:00:00', 10, 0),
-      (2, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '05:30:00', 10, 0),
-      (2, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '05:00:00', 10, 0),
-      (2, DATE_ADD(CURDATE(), INTERVAL 1 DAY), '05:30:00', 10, 0),
-      (3, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '08:00:00', 10, 0),
-      (3, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '10:00:00', 10, 0),
-      (3, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '14:00:00', 10, 0),
-      (4, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '09:00:00', 10, 0),
-      (4, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '11:00:00', 10, 0),
-      (4, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '15:00:00', 10, 0),
-      (5, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '10:00:00', 10, 0),
-      (5, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '12:00:00', 10, 0),
-      (5, DATE_ADD(CURDATE(), INTERVAL 0 DAY), '16:00:00', 10, 0)
+      INSERT INTO experiences (name, description, location, price, image_url, min_age) VALUES
+      ('Kayaking', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Udupi', 999.00, 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=400&fit=crop', 10),
+      ('Nandi Hills Sunrise', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Bangalore', 899.00, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop', 10),
+      ('Coffee Trail', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Coorg', 1299.00, 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=400&fit=crop', 10),
+      ('Beach Trek', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Gokarna', 799.00, 'https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&h=400&fit=crop', 10),
+      ('Mountain Cycling', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Ooty', 1099.00, 'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=800&h=400&fit=crop', 12),
+      ('Boat Cruise', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Sunderban', 999.00, 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=800&h=400&fit=crop', 10),
+      ('Bungee Jumping', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Manali', 2499.00, 'https://images.unsplash.com/photo-1656833111546-07d98abab448?w=800&h=400&fit=crop', 18),
+      ('Waterfall Rappelling', 'Curated small-group experience. Certified guide. Safety first with gear included.', 'Lonavala', 1499.00, 'https://images.unsplash.com/photo-1511406361295-0a1ff814c0ce?w=800&h=400&fit=crop', 14)
     `);
+
+    const slotsInserts = [];
+    
+    for (let exp = 1; exp <= 8; exp++) {
+      let timeSlots: string[] = [];
+      
+      if (exp === 1) {
+        timeSlots = ['07:00:00', '09:00:00', '11:00:00', '13:00:00', '15:00:00'];
+      } else if (exp === 2) {
+        timeSlots = ['05:00:00', '05:30:00', '06:00:00'];
+      } else if (exp === 3) {
+        timeSlots = ['08:00:00', '10:00:00', '14:00:00', '16:00:00'];
+      } else if (exp === 4) {
+        timeSlots = ['09:00:00', '11:00:00', '15:00:00', '17:00:00'];
+      } else if (exp === 5) {
+        timeSlots = ['10:00:00', '12:00:00', '14:00:00', '16:00:00'];
+      } else if (exp === 6) {
+        timeSlots = ['09:00:00', '13:00:00', '17:00:00'];
+      } else if (exp === 7) {
+        timeSlots = ['10:00:00', '12:00:00', '15:00:00'];
+      } else if (exp === 8) {
+        timeSlots = ['08:00:00', '11:00:00', '14:00:00', '16:00:00'];
+      }
+      
+      for (let day = 0; day < 30; day++) {
+        for (const time of timeSlots) {
+          const capacity = 10;
+          let bookedCount = 0;
+          
+          if (day === 0 && Math.random() > 0.5) {
+            bookedCount = Math.floor(Math.random() * (capacity + 1));
+          } else if (day < 7 && Math.random() > 0.7) {
+            bookedCount = Math.floor(Math.random() * 6);
+          }
+          
+          slotsInserts.push(
+            `(${exp}, DATE_ADD(CURDATE(), INTERVAL ${day} DAY), '${time}', ${capacity}, ${bookedCount})`
+          );
+        }
+      }
+    }
+    
+    const batchSize = 100;
+    for (let i = 0; i < slotsInserts.length; i += batchSize) {
+      const batch = slotsInserts.slice(i, i + batchSize);
+      await pool.query(`
+        INSERT INTO slots (experience_id, slot_date, slot_time, total_capacity, booked_count) 
+        VALUES ${batch.join(', ')}
+      `);
+    }
   }
 };
 
