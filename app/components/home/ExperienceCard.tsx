@@ -6,7 +6,7 @@ const ExperienceCard: React.FC<{ experience: Experience }> = ({
   experience,
 }) => {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-[#F0F0F0] rounded-xl overflow-hidden hover:shadow-sm transition-shadow duration-300">
       <div className="relative h-56">
         <Image
           src={experience.image_url}

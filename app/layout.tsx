@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google';
 import "./globals.css";
 import Header from "@/app/components/header";
 import { SearchProvider } from "@/app/lib/SearchContext";
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
   description: "Book amazing travel experiences",
 };
 
+const inter = Inter({ subsets: ["latin"] });
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -15,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-full h-full flex flex-col">
+      <body className={"w-full h-full flex flex-col" + " " + inter.className }>
         <SearchProvider>
           <Header />
           {children}

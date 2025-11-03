@@ -19,7 +19,7 @@ export default function PricingSummary({
         <span className="text-lg text-[#161616]">₹{startPrice}</span>
       </div>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <span className="text-[#656565]">Quantity</span>
         <div className="flex items-center gap-4">
           <button
@@ -62,19 +62,16 @@ export default function PricingSummary({
           </button>
         </div>
       </div>
-
-      <div className="border-t border-gray-300 pt-4 space-y-3 mb-6">
-        <div className="flex justify-between text-gray-600">
+        <div className="flex justify-between text-gray-600 mb-4">
           <span className="text-[#656565]">Subtotal</span>
           <span className="text-sm text-[#161616]">₹{subtotal}</span>
         </div>
-        <div className="flex justify-between text-gray-600">
+        <div className="flex justify-between text-gray-600 mb-4">
           <span className="text-[#656565]">Taxes</span>
           <span className="text-sm text-[#161616]">₹{taxes}</span>
         </div>
-      </div>
 
-      <div className="flex justify-between items-center mb-6 text-xl font-[500] text-[#161616]">
+      <div className="flex justify-between items-center mb-6 text-xl font-[500] text-[#161616] border-t border-gray-300 pt-4">
         <span >Total</span>
         <span>₹{total}</span>
       </div>

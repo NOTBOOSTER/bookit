@@ -28,7 +28,7 @@ export default function CheckoutForm({
   onSubmit,
 }: Props) {
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6 bg-[#EFEFEF] p-5 rounded-xl">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm text-[#5B5B5B] mb-2">Full name</label>

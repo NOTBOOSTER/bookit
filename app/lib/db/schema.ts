@@ -143,11 +143,44 @@ const seedSampleData = async (pool: mysql.Pool) => {
         for (const time of timeSlots) {
           const capacity = 10;
           let bookedCount = 0;
+          const rand = Math.random();
           
-          if (day === 0 && Math.random() > 0.5) {
-            bookedCount = Math.floor(Math.random() * (capacity + 1));
-          } else if (day < 7 && Math.random() > 0.7) {
-            bookedCount = Math.floor(Math.random() * 6);
+          if (day === 0) {
+            if (rand < 0.2) {
+              bookedCount = capacity;
+            } else if (rand < 0.5) {
+              bookedCount = Math.floor(capacity * 0.8);
+            } else if (rand < 0.7) {
+              bookedCount = Math.floor(capacity * 0.5);
+            } else {
+              bookedCount = Math.floor(Math.random() * 4);
+            }
+          } else if (day < 7) {
+            if (rand < 0.15) {
+              bookedCount = capacity;
+            } else if (rand < 0.35) {
+              bookedCount = Math.floor(capacity * 0.6);
+            } else if (rand < 0.55) {
+              bookedCount = Math.floor(capacity * 0.5);
+            } else {
+              bookedCount = Math.floor(Math.random() * 3);
+            }
+          } else if (day < 14) {
+            if (rand < 0.1) {
+              bookedCount = capacity;
+            } else if (rand < 0.3) {
+              bookedCount = Math.floor(capacity * 0.5);
+            } else {
+              bookedCount = Math.floor(Math.random() * 3);
+            }
+          } else {
+            if (rand < 0.05) {
+              bookedCount = capacity;
+            } else if (rand < 0.2) {
+              bookedCount = Math.floor(Math.random() * 5);
+            } else {
+              bookedCount = 0;
+            }
           }
           
           slotsInserts.push(

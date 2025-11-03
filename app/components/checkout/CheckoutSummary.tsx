@@ -62,9 +62,6 @@ export default function CheckoutSummary({
           <span className="text-[#656565]">Qty</span>
           <span className="text-[#161616] text-sm">{quantity}</span>
         </div>
-      </div>
-
-      <div className="border-t border-gray-300 pt-4 space-y-3 mb-6">
         <div className="flex justify-between">
           <span className="text-[#656565]">Subtotal</span>
           <span className="text-[#161616]">₹{subtotal}</span>
@@ -80,8 +77,9 @@ export default function CheckoutSummary({
           </div>
         )}
       </div>
+        
 
-      <div className="flex justify-between items-center mb-6 text-xl font-[500] text-[#161616]">
+      <div className=" border-t border-[#D9D9D9] pt-4 space-y-3 flex justify-between items-center mb-6 text-xl font-[500] text-[#161616]">
         <span>Total</span>
         <span>₹{total}</span>
       </div>
